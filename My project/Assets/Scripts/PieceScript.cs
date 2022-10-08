@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PieceScript : MonoBehaviour
 {
-    //Indique si c'est la pièce manipulé par le joueur ou non
+    //Indique si c'est la pièce manipulé par le constructeur 
     private bool virgin = true;
+    //indique si elle a été touchée par le climber
+    private bool touched = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +26,12 @@ public class PieceScript : MonoBehaviour
         //Si la pièce en touche une autre, on joue la prochaine
         if (collision.collider.transform.parent != this.transform.parent)
             tryNextPiece();
+        //Si la pièce touche le climber, elle donne une piece suplementaire au climber
+        if (collision.gameObject.tag == "Climber" && !touched)
+        {
+            SceneManager.Instance.pieceLeft++;
+            touched = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,6 +41,7 @@ public class PieceScript : MonoBehaviour
         {
             trydestroy();
         }
+        
     }
 
     public void tryNextPiece()

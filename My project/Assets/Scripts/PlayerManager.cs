@@ -71,7 +71,6 @@ public class PlayerManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        print(collision.contacts[0].normal);
         //si l'objet que je touche est sous mes pieds et à au moins 45 degré, je peux sauter dessus
         if (collision.contacts[0].normal.y > 0.85f)
         {

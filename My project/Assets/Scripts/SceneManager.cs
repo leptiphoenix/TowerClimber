@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 
 public class SceneManager : MonoBehaviour
@@ -14,6 +15,9 @@ public class SceneManager : MonoBehaviour
     [SerializeField] float PiecefallSpeed;
     [SerializeField] float fastMultiplier;
     [SerializeField] float PieceTranslateSpeed;
+
+    public int pieceLeft;
+    [SerializeField] TextMeshProUGUI pieceLeftUI;
 
     private int PiecePoolSize;
     private GameObject PieceToPlace;
@@ -43,40 +47,65 @@ public class SceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //limit piece to place speed
-        PieceToPlace.GetComponent<Rigidbody>().velocity = PieceToPlace.GetComponent<Rigidbody>().velocity.normalized * Mathf.Min(PieceToPlace.GetComponent<Rigidbody>().velocity.magnitude, PiecefallSpeed);
+        if (PieceToPlace != null)
+            PieceToPlace.GetComponent<Rigidbody>().velocity = PieceToPlace.GetComponent<Rigidbody>().velocity.normalized * Mathf.Min(PieceToPlace.GetComponent<Rigidbody>().velocity.magnitude, PiecefallSpeed);
+
+        pieceLeftUI.text = pieceLeft.ToString();
     }
 
     private void TranslatePiece(float direction)
     {
-        if (direction > 0)
+        if (PieceToPlace != null)
         {
-            PieceToPlace.transform.Translate(new Vector3(PieceTranslateSpeed, 0f, 0f),relativeTo:Space.World);
+            if (direction > 0)
+            {
+                PieceToPlace.transform.Translate(new Vector3(PieceTranslateSpeed, 0f, 0f), relativeTo: Space.World);
+            }
+            else if (direction < 0)
+            {
+                PieceToPlace.transform.Translate(new Vector3(-PieceTranslateSpeed, 0f, 0f), relativeTo: Space.World);
+            }
         }
-        else if (direction < 0)
-        {
-            PieceToPlace.transform.Translate(new Vector3(-PieceTranslateSpeed, 0f, 0f), relativeTo: Space.World);
-        }
+            
     }
     private void MovePieceFaster()
     {
-        PieceToPlace.transform.Translate(new Vector3(0f, -fastMultiplier, 0f), relativeTo: Space.World);
+        if (PieceToPlace != null)
+            PieceToPlace.transform.Translate(new Vector3(0f, -fastMultiplier, 0f), relativeTo: Space.World);
     }
     private void rotatePiece()
     {
-        PieceToPlace.transform.Rotate(new Vector3(0f,0f,90f));
+        if (PieceToPlace != null)
+            PieceToPlace.transform.Rotate(new Vector3(0f,0f,90f));
     }
 
     public void StartGame()
     {
+        pieceLeft = 4;
         nextPiece();
     }
 
     public void nextPiece()
     {
-        PieceToPlace = Instantiate(PiecePool[Random.Range(0, PiecePoolSize)], SpawnPoint.transform.position, Quaternion.identity);
+        PieceToPlace = null;
+        if (pieceLeft < 1)
+        {
+            StartCoroutine(waitforclilmber());
+        }
+        else
+        {
+            PieceToPlace = Instantiate(PiecePool[Random.Range(0, PiecePoolSize)], SpawnPoint.transform.position, Quaternion.identity);
+            pieceLeft--;
+        }
+        
     }
-
+    IEnumerator waitforclilmber()
+    {
+        yield return new WaitUntil(() => pieceLeft > 0);
+        nextPiece();
+    }
     private void OnEnable()
     {
         ctrl.Enable();
