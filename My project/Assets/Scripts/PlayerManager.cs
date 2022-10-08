@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -10,6 +12,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float maxsYSpeed;
     [SerializeField] float maxsXSpeed;
+    [SerializeField] TextMeshProUGUI scoreUI;
+    [SerializeField] TextMeshProUGUI HighscoreUI;
+
+    public int HighScore;
+    public int Score;
 
     private Rigidbody rb;
 
@@ -24,6 +31,16 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
+        SaveData data = SaveSystem.Read();
+        if (data != null)
+        {
+            HighScore = data.HighScore;
+        }
+        else
+        {
+            HighScore = 0;
+        }
+        HighscoreUI.text = HighScore.ToString();
     }
 
     // Update is called once per frame
@@ -37,6 +54,9 @@ public class PlayerManager : MonoBehaviour
         //limit player speed
         rb.velocity = new Vector3( Mathf.Min(rb.velocity.x, maxsXSpeed), Mathf.Min(rb.velocity.y, maxsYSpeed), rb.velocity.z);
         rb.velocity = new Vector3(Mathf.Max(rb.velocity.x, -maxsXSpeed), Mathf.Max(rb.velocity.y, -maxsYSpeed), rb.velocity.z);
+
+        Score = (int) Mathf.Max(rb.transform.position.y, Score);
+        scoreUI.text = Score.ToString();
     }
 
     public void jump()
@@ -44,6 +64,23 @@ public class PlayerManager : MonoBehaviour
         rb.AddForce(new Vector3(0, jumpForce, 0));
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //si le joueur touche la zone, la partie est terminée
+        if (other.gameObject.tag == "GameOver")
+        {
+            EndGame();
+        }
+    }
+    public void EndGame()
+    {
+        SaveData data = new SaveData(
+            (int)Mathf.Max(HighScore, Score)
+        );
+        SaveSystem.Write(data);
+        Destroy(SceneManager.Instance.gameObject);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("game");
+    }
 
     private void OnEnable()
     {
