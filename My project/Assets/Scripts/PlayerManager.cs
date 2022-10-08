@@ -10,8 +10,9 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] float moveForce;
     [SerializeField] float jumpForce;
-    [SerializeField] float maxsYSpeed;
-    [SerializeField] float maxsXSpeed;
+    [SerializeField] float maxYSpeed;
+    [SerializeField] float maxXSpeed;
+    [SerializeField] float XDrag;
     [SerializeField] TextMeshProUGUI scoreUI;
     [SerializeField] TextMeshProUGUI HighscoreUI;
 
@@ -62,9 +63,23 @@ public class PlayerManager : MonoBehaviour
             rb.AddForce(new Vector3(ctrl.Climber.move.ReadValue<float>() * moveForce, 0, 0));
         }
 
+        
+
         //limit player speed
-        rb.velocity = new Vector3( Mathf.Min(rb.velocity.x, maxsXSpeed), Mathf.Min(rb.velocity.y, maxsYSpeed), rb.velocity.z);
-        rb.velocity = new Vector3(Mathf.Max(rb.velocity.x, -maxsXSpeed), Mathf.Max(rb.velocity.y, -maxsYSpeed), rb.velocity.z);
+        rb.velocity = new Vector3( Mathf.Min(rb.velocity.x, maxXSpeed), Mathf.Min(rb.velocity.y, maxYSpeed), rb.velocity.z);
+        rb.velocity = new Vector3(Mathf.Max(rb.velocity.x, -maxXSpeed), Mathf.Max(rb.velocity.y, -maxYSpeed), rb.velocity.z);
+
+        //drag player lateral movement
+        float xspeed = rb.velocity.x;
+        if (Mathf.Abs(xspeed) > 0.001)
+        {
+            rb.velocity = new Vector3(0f, rb.velocity.y, rb.velocity.z);
+        }
+        else
+        {
+            rb.velocity = new Vector3(rb.velocity.x * XDrag, rb.velocity.y, rb.velocity.z);
+        }
+
 
         Score = (int) Mathf.Max(rb.transform.position.y, Score);
         if (Score >= bonusTreshold)
@@ -87,7 +102,7 @@ public class PlayerManager : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //si l'objet que je touche est sous mes pieds et à au moins 45 degré, je peux sauter dessus
-        if (collision.contacts[0].normal.y > 0.85f)
+        if (collision.contacts[0].normal.y > 0.80f)
         {
             jumping = false;
         }

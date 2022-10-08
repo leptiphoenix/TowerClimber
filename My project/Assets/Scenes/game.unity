@@ -2245,7 +2245,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646449931}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 0.25
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -2265,18 +2265,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b0e1ead3f8e51468298085929e82fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 15
-  jumpForce: 400
-  maxsYSpeed: 7
-  maxsXSpeed: 3
+  moveForce: 40
+  jumpForce: 80
+  maxYSpeed: 7
+  maxXSpeed: 7
+  XDrag: 0.999999
   scoreUI: {fileID: 1499169383}
   HighscoreUI: {fileID: 1755748178}
   BonusPool:
   - {fileID: 8225697016902084871, guid: e8928370e74d94f4a8db462e74246d12, type: 3}
   - {fileID: 821057174560483036, guid: 70fad0751cba3c44197f6ad208820347, type: 3}
   BonusInterval: 5
-  HighScore: 0
-  Score: 0
+  HighScore: 10
+  Score: 6
 --- !u!4 &1646449934
 Transform:
   m_ObjectHideFlags: 0
@@ -2690,7 +2691,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 9fd4eb25f1a7f5b43ae24861eec9516b, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
