@@ -41,7 +41,6 @@ public class PlayerManager : MonoBehaviour
 
     public void jump()
     {
-        print("jump");
         rb.AddForce(new Vector3(0, jumpForce, 0));
     }
 

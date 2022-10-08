@@ -43,6 +43,7 @@ public class SceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //limit piece to place speed
         PieceToPlace.GetComponent<Rigidbody>().velocity = PieceToPlace.GetComponent<Rigidbody>().velocity.normalized * Mathf.Min(PieceToPlace.GetComponent<Rigidbody>().velocity.magnitude, PiecefallSpeed);
     }
 
