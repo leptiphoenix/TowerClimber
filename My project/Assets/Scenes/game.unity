@@ -2135,7 +2135,7 @@ MonoBehaviour:
   BonusPool:
   - {fileID: 8225697016902084871, guid: e8928370e74d94f4a8db462e74246d12, type: 3}
   - {fileID: 821057174560483036, guid: 70fad0751cba3c44197f6ad208820347, type: 3}
-  BonusInterval: 2
+  BonusInterval: 5
   HighScore: 0
   Score: 0
 --- !u!4 &1646449934
