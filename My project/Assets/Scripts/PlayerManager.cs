@@ -15,8 +15,15 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreUI;
     [SerializeField] TextMeshProUGUI HighscoreUI;
 
+    [SerializeField] List<GameObject> BonusPool;
+    [SerializeField] int BonusInterval;
+
+
     public int HighScore;
     public int Score;
+
+    private int BonusPoolSize;
+    private int bonusTreshold;
 
     private Rigidbody rb;
     private bool jumping = false;
@@ -42,6 +49,9 @@ public class PlayerManager : MonoBehaviour
             HighScore = 0;
         }
         HighscoreUI.text = HighScore.ToString();
+
+        BonusPoolSize = BonusPool.Count;
+        bonusTreshold = BonusInterval;
     }
 
     // Update is called once per frame
@@ -57,6 +67,11 @@ public class PlayerManager : MonoBehaviour
         rb.velocity = new Vector3(Mathf.Max(rb.velocity.x, -maxsXSpeed), Mathf.Max(rb.velocity.y, -maxsYSpeed), rb.velocity.z);
 
         Score = (int) Mathf.Max(rb.transform.position.y, Score);
+        if (Score >= bonusTreshold)
+        {
+            bonusTreshold += BonusInterval;
+            Instantiate(BonusPool[Random.Range(0, BonusPoolSize)], new Vector3(Random.Range(-5,5),Score+3,0), Quaternion.identity);
+        }
         scoreUI.text = Score.ToString();
     }
 
@@ -83,6 +98,20 @@ public class PlayerManager : MonoBehaviour
         if (other.gameObject.tag == "GameOver")
         {
             EndGame();
+        }
+        //si le joueur touche un bonus on regarde lequel et on applique son effet
+        if (other.gameObject.tag == "Bonus")
+        {
+            string bonus = other.GetComponent<Bonus>().bonus;
+            if (bonus.Equals("PieceUp"))
+            {
+                SceneManager.Instance.pieceLeft++;
+            }
+            if (bonus.Equals("Solid"))
+            {
+                SceneManager.Instance.makenextPieceSolid();
+            }
+            Destroy(other.gameObject);
         }
     }
     public void EndGame()

@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class PieceScript : MonoBehaviour
 {
+    [SerializeField] Material solidMaterial;
+
+    private bool BeSolid = false;
+
     //Indique si c'est la pièce manipulé par le constructeur 
     private bool virgin = true;
     //indique si elle a été touchée par le climber
     private bool touched = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +30,14 @@ public class PieceScript : MonoBehaviour
     {
         //Si la pièce en touche une autre, on joue la prochaine
         if (collision.collider.transform.parent != this.transform.parent)
+        {
             tryNextPiece();
+            if (BeSolid)
+            {
+                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            }
+        }
+            
         //Si la pièce touche le climber, elle donne une piece suplementaire au climber
         if (collision.gameObject.tag == "Climber" && !touched)
         {
@@ -42,6 +54,15 @@ public class PieceScript : MonoBehaviour
             trydestroy();
         }
         
+    }
+
+    public void willBeSolid()
+    {
+        foreach(MeshRenderer child in this.GetComponentsInChildren<MeshRenderer>())
+        {
+            child.material = solidMaterial;
+        }
+        BeSolid = true;
     }
 
     public void tryNextPiece()

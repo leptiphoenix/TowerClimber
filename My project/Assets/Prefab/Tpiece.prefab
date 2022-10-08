@@ -437,6 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1349a83b2294f4d80c7f3512d4e7d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  solidMaterial: {fileID: 2100000, guid: 4ecb045247f0e0443b42cf4eaa07aed5, type: 2}
 --- !u!54 &6304853809872955106
 Rigidbody:
   m_ObjectHideFlags: 0

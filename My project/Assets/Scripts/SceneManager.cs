@@ -19,9 +19,9 @@ public class SceneManager : MonoBehaviour
     public int pieceLeft;
     [SerializeField] TextMeshProUGUI pieceLeftUI;
 
+    
     private int PiecePoolSize;
     private GameObject PieceToPlace;
-    private float maxPiecespeed;
 
     private void Awake()
     {
@@ -40,6 +40,7 @@ public class SceneManager : MonoBehaviour
             Destroy(gameObject);
         }
         PiecePoolSize = PiecePool.Count;
+        
         StartGame();
     }
 
@@ -83,7 +84,6 @@ public class SceneManager : MonoBehaviour
 
     public void StartGame()
     {
-        pieceLeft = 4;
         nextPiece();
     }
 
@@ -100,6 +100,11 @@ public class SceneManager : MonoBehaviour
             pieceLeft--;
         }
         
+    }
+
+    public void makenextPieceSolid()
+    {
+        PieceToPlace.GetComponent<PieceScript>().willBeSolid();
     }
     IEnumerator waitforclilmber()
     {
