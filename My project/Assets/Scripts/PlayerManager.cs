@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour
     public int Score;
 
     private Rigidbody rb;
+    private bool jumping = false;
 
     private void Awake()
     {
@@ -61,9 +62,22 @@ public class PlayerManager : MonoBehaviour
 
     public void jump()
     {
-        rb.AddForce(new Vector3(0, jumpForce, 0));
+        if (!jumping)
+        {
+            rb.AddForce(new Vector3(0, jumpForce, 0));
+            jumping = true;
+        }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        print(collision.contacts[0].normal);
+        //si l'objet que je touche est sous mes pieds et à au moins 45 degré, je peux sauter dessus
+        if (collision.contacts[0].normal.y > 0.85f)
+        {
+            jumping = false;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         //si le joueur touche la zone, la partie est terminée
