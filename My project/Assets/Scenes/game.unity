@@ -3368,9 +3368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b0e1ead3f8e51468298085929e82fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 20
-  jumpForce: 80
-  maxYSpeed: 7
+  moveForce: 8
+  jumpForce: 120
+  maxYSpeed: 8
   maxXSpeed: 5
   XDrag: 0.999999
   scoreUI: {fileID: 1499169383}
