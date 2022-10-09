@@ -15,6 +15,8 @@ public class CameraClimber : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.position = new Vector3(climber.transform.position.x, climber.transform.position.y, this.transform.position.z);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(climber.transform.position - transform.position), 5 * Time.deltaTime);
+        this.transform.position = new Vector3(climber.transform.position.x*2, climber.transform.position.y+2, this.transform.position.z);
     }
+
 }

@@ -15,6 +15,9 @@ public class SceneManager : MonoBehaviour
     [SerializeField] float PiecefallSpeed;
     [SerializeField] float fastMultiplier;
     [SerializeField] float PieceTranslateSpeed;
+    [SerializeField] TextMeshProUGUI Tips;
+
+    private List<string> tipslist;
 
     public int pieceLeft;
     [SerializeField] TextMeshProUGUI pieceLeftUI;
@@ -40,7 +43,20 @@ public class SceneManager : MonoBehaviour
             Destroy(gameObject);
         }
         PiecePoolSize = PiecePool.Count;
-        
+
+        tipslist = new List<string>();
+
+        tipslist.Add("Tip : Climb as high as you can !");
+        tipslist.Add("Tip : When the climber use a new piece, the constructor can put an other one !");
+        tipslist.Add("Tip : Cooperate to make the best tower !");
+        tipslist.Add("Tip : The climber is lighter than the pieces !");
+        tipslist.Add("Tip : Poutine is delicious !");
+        tipslist.Add("Tip : Share your highscore !");
+        tipslist.Add("Tip : You can jump on surfaces up to 45° !");
+        tipslist.Add("Tip : Don't fall !");
+
+
+        Tips.text = tipslist[Random.Range(0, tipslist.Count)];
         StartGame();
     }
 
@@ -60,11 +76,11 @@ public class SceneManager : MonoBehaviour
     {
         if (PieceToPlace != null)
         {
-            if (direction > 0)
+            if (direction > 0 && PieceToPlace.transform.position.x < 6)
             {
                 PieceToPlace.transform.Translate(new Vector3(PieceTranslateSpeed, 0f, 0f), relativeTo: Space.World);
             }
-            else if (direction < 0)
+            else if (direction < 0 && PieceToPlace.transform.position.x > -6)
             {
                 PieceToPlace.transform.Translate(new Vector3(-PieceTranslateSpeed, 0f, 0f), relativeTo: Space.World);
             }

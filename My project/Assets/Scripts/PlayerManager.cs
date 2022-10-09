@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] int BonusInterval;
 
 
-    public int HighScore;
+    private int HighScore;
     public int Score;
 
     private int BonusPoolSize;
