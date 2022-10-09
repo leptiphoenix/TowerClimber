@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3228966, g: 0.8112222, b: 0.9285886, a: 1}
+  m_IndirectSpecularColor: {r: 0.32289222, g: 0.8092532, b: 0.92848176, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3368,9 +3368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b0e1ead3f8e51468298085929e82fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 8
-  jumpForce: 120
-  maxYSpeed: 8
+  moveForce: 20
+  jumpForce: 80
+  maxYSpeed: 7
   maxXSpeed: 5
   XDrag: 0.999999
   scoreUI: {fileID: 1499169383}
