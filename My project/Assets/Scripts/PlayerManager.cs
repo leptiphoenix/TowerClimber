@@ -51,13 +51,14 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         //Decomment this code to reset highscore 
-        //SaveSystem.Write(new SaveData(0));
+        //SaveSystem.Write(new SaveData());
 
         rb = this.GetComponent<Rigidbody>();
         SaveData data = SaveSystem.Read();
         if (data != null)
         {
             HighScore = data.HighScore;
+            panelinfo.SetActive(data.pref);
         }
         else
         {
@@ -160,7 +161,8 @@ public class PlayerManager : MonoBehaviour
     {
         endgameSound.PlayOneShot(endgameSound.clip);
         SaveData data = new SaveData(
-            (int)Mathf.Max(HighScore, Score)
+            (int)Mathf.Max(HighScore, Score),
+            panelinfo.activeSelf
         );
         SaveSystem.Write(data);
         SceneManager.Instance.pieceLeft = 0;
@@ -188,6 +190,11 @@ public class PlayerManager : MonoBehaviour
     private void hide()
     {
         panelinfo.SetActive(!panelinfo.activeSelf);
+        SaveData data = new SaveData(
+            HighScore,
+            panelinfo.activeSelf
+        );
+        SaveSystem.Write(data);
     }
 
     private void quit()
