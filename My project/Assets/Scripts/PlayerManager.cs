@@ -195,6 +195,10 @@ public class PlayerManager : MonoBehaviour
             panelinfo.activeSelf
         );
         SaveSystem.Write(data);
+        if (panelinfo.activeSelf)
+        {
+            SceneManager.Instance.changeinfo();
+        }
     }
 
     private void quit()

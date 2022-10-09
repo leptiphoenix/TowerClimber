@@ -18,6 +18,7 @@ public class SceneManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI Tips;
 
     private List<string> tipslist;
+    private int tipn;
 
     public int pieceLeft;
     [SerializeField] TextMeshProUGUI pieceLeftUI;
@@ -55,8 +56,8 @@ public class SceneManager : MonoBehaviour
         tipslist.Add("Tip : You can jump on surfaces up to 45° !");
         tipslist.Add("Tip : Don't fall !");
 
-
-        Tips.text = tipslist[Random.Range(0, tipslist.Count)];
+        tipn = Random.Range(0, tipslist.Count);
+        Tips.text = tipslist[tipn];
         StartGame();
     }
 
@@ -116,6 +117,12 @@ public class SceneManager : MonoBehaviour
             pieceLeft--;
         }
         
+    }
+
+    public void changeinfo()
+    {
+        tipn = (tipn + 1) % tipslist.Count;
+        Tips.text = tipslist[tipn];
     }
 
     public void makenextPieceSolid()

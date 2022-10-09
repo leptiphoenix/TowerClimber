@@ -39,7 +39,7 @@ public class PieceScript : MonoBehaviour
             tryNextPiece();
             if (BeSolid)
             {
-                this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                StartCoroutine(freezebuffer());
             }
         }
             
@@ -50,6 +50,12 @@ public class PieceScript : MonoBehaviour
             SceneManager.Instance.pieceLeft++;
             touched = true;
         }
+    }
+
+    IEnumerator freezebuffer()
+    {
+        yield return new WaitForSeconds(1f);
+        this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private void OnTriggerEnter(Collider other)
