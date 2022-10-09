@@ -182,6 +182,54 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""c34a84a0-b102-4197-a862-fe849c23b924"",
+            ""actions"": [
+                {
+                    ""name"": ""quit"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3eb8ee1-e158-44ea-8a97-10c1451cdb00"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""hide"",
+                    ""type"": ""Button"",
+                    ""id"": ""a0882e66-e893-4c82-80ab-ad25996b95ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""520ed425-7b98-4cda-b886-157602968656"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""quit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b9e80836-4eb4-429f-bc8e-248c69fa9eef"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""hide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -195,6 +243,10 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_Climber = asset.FindActionMap("Climber", throwIfNotFound: true);
         m_Climber_Jump = m_Climber.FindAction("Jump", throwIfNotFound: true);
         m_Climber_move = m_Climber.FindAction("move", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_quit = m_UI.FindAction("quit", throwIfNotFound: true);
+        m_UI_hide = m_UI.FindAction("hide", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -340,6 +392,47 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         }
     }
     public ClimberActions @Climber => new ClimberActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_quit;
+    private readonly InputAction m_UI_hide;
+    public struct UIActions
+    {
+        private @GameInput m_Wrapper;
+        public UIActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @quit => m_Wrapper.m_UI_quit;
+        public InputAction @hide => m_Wrapper.m_UI_hide;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void SetCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterface != null)
+            {
+                @quit.started -= m_Wrapper.m_UIActionsCallbackInterface.OnQuit;
+                @quit.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnQuit;
+                @quit.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnQuit;
+                @hide.started -= m_Wrapper.m_UIActionsCallbackInterface.OnHide;
+                @hide.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnHide;
+                @hide.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnHide;
+            }
+            m_Wrapper.m_UIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @quit.started += instance.OnQuit;
+                @quit.performed += instance.OnQuit;
+                @quit.canceled += instance.OnQuit;
+                @hide.started += instance.OnHide;
+                @hide.performed += instance.OnHide;
+                @hide.canceled += instance.OnHide;
+            }
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     public interface IConstructorActions
     {
         void OnPieceTranslate(InputAction.CallbackContext context);
@@ -350,5 +443,10 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     {
         void OnJump(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnQuit(InputAction.CallbackContext context);
+        void OnHide(InputAction.CallbackContext context);
     }
 }

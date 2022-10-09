@@ -26,6 +26,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] List<GameObject> BonusPool;
     [SerializeField] int BonusInterval;
 
+    [SerializeField] GameObject panelinfo;
+
     private bool highscoresoundplayed = false;
 
     private int HighScore;
@@ -41,7 +43,8 @@ public class PlayerManager : MonoBehaviour
     {
         ctrl = new GameInput();
         ctrl.Climber.Jump.performed += _ => jump();
-        //ctrl.Climber.move.performed += ctx => Move(ctx.ReadValue<float>());
+        ctrl.UI.quit.performed += ctx => quit();
+        ctrl.UI.hide.performed += ctx => hide();
     }
 
     // Start is called before the first frame update
@@ -180,5 +183,16 @@ public class PlayerManager : MonoBehaviour
     private void OnDisable()
     {
         ctrl.Disable();
+    }
+
+    private void hide()
+    {
+        panelinfo.SetActive(!panelinfo.activeSelf);
+    }
+
+    private void quit()
+    {
+        Destroy(SceneManager.Instance.gameObject);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("menu");
     }
 }

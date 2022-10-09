@@ -49,7 +49,7 @@ public class SceneManager : MonoBehaviour
         tipslist.Add("Tip : Climb as high as you can !");
         tipslist.Add("Tip : When the climber use a new piece, the constructor can put an other one !");
         tipslist.Add("Tip : Cooperate to make the best tower !");
-        tipslist.Add("Tip : The climber is lighter than the pieces !");
+        tipslist.Add("Tip : The climber is lighter than pieces !");
         tipslist.Add("Tip : Poutine is delicious !");
         tipslist.Add("Tip : Share your highscore !");
         tipslist.Add("Tip : You can jump on surfaces up to 45° !");
