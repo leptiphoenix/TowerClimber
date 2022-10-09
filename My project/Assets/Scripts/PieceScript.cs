@@ -14,10 +14,14 @@ public class PieceScript : MonoBehaviour
     private bool touched = false;
 
 
+    [SerializeField] AudioSource piecePlaced;
+    [SerializeField] AudioSource playerTouched;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        piecePlaced = GameObject.Find("pieceplaced").GetComponent<AudioSource>();
+        playerTouched = GameObject.Find("touched").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -31,6 +35,7 @@ public class PieceScript : MonoBehaviour
         //Si la pièce en touche une autre, on joue la prochaine
         if (collision.collider.transform.parent != this.transform.parent)
         {
+            
             tryNextPiece();
             if (BeSolid)
             {
@@ -41,6 +46,7 @@ public class PieceScript : MonoBehaviour
         //Si la pièce touche le climber, elle donne une piece suplementaire au climber
         if (collision.gameObject.tag == "Climber" && !touched)
         {
+            playerTouched.PlayOneShot(playerTouched.clip);
             SceneManager.Instance.pieceLeft++;
             touched = true;
         }
@@ -69,6 +75,7 @@ public class PieceScript : MonoBehaviour
     {
         if (virgin)
         {
+            piecePlaced.PlayOneShot(piecePlaced.clip);
             virgin = false;
             //we keep control of the piece a bit after colision
             //StartCoroutine(keepControl());

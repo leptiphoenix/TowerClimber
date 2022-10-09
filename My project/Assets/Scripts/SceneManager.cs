@@ -108,7 +108,7 @@ public class SceneManager : MonoBehaviour
         PieceToPlace = null;
         if (pieceLeft < 1)
         {
-            StartCoroutine(waitforclilmber());
+            StartCoroutine(waitforclimber());
         }
         else
         {
@@ -122,7 +122,7 @@ public class SceneManager : MonoBehaviour
     {
         PieceToPlace.GetComponent<PieceScript>().willBeSolid();
     }
-    IEnumerator waitforclilmber()
+    IEnumerator waitforclimber()
     {
         yield return new WaitUntil(() => pieceLeft > 0);
         nextPiece();

@@ -16,9 +16,17 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreUI;
     [SerializeField] TextMeshProUGUI HighscoreUI;
 
+    [SerializeField] AudioSource jumpSound;
+    [SerializeField] AudioSource bonusSound;
+    [SerializeField] AudioSource bonusSoundpop;
+    [SerializeField] AudioSource endgameSound;
+    [SerializeField] AudioSource highscoreSound;
+
+
     [SerializeField] List<GameObject> BonusPool;
     [SerializeField] int BonusInterval;
 
+    private bool highscoresoundplayed = false;
 
     private int HighScore;
     public int Score;
@@ -39,6 +47,9 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Decomment this code to reset highscore 
+        //SaveSystem.Write(new SaveData(0));
+
         rb = this.GetComponent<Rigidbody>();
         SaveData data = SaveSystem.Read();
         if (data != null)
@@ -58,6 +69,8 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //move
         if (ctrl.Climber.move.IsPressed())
         {
             rb.AddForce(new Vector3(ctrl.Climber.move.ReadValue<float>() * moveForce, 0, 0));
@@ -80,20 +93,29 @@ public class PlayerManager : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x * XDrag, rb.velocity.y, rb.velocity.z);
         }
 
-
+        //check to pop bonus
         Score = (int) Mathf.Max(rb.transform.position.y, Score);
         if (Score >= bonusTreshold)
         {
             bonusTreshold += BonusInterval;
+            bonusSoundpop.PlayOneShot(bonusSoundpop.clip);
             Instantiate(BonusPool[Random.Range(0, BonusPoolSize)], new Vector3(Random.Range(-5,5),Score+3,0), Quaternion.identity);
         }
         scoreUI.text = Score.ToString();
+
+        //si le highscore est dépasé, jouer une petite musique
+        if (Score > HighScore && !highscoresoundplayed)
+        {
+            highscoresoundplayed = true;
+            highscoreSound.PlayOneShot(highscoreSound.clip);
+        }
     }
 
     public void jump()
     {
         if (!jumping)
         {
+            jumpSound.PlayOneShot(jumpSound.clip);
             rb.AddForce(new Vector3(0, jumpForce, 0));
             jumping = true;
         }
@@ -117,6 +139,8 @@ public class PlayerManager : MonoBehaviour
         //si le joueur touche un bonus on regarde lequel et on applique son effet
         if (other.gameObject.tag == "Bonus")
         {
+
+            bonusSound.PlayOneShot(bonusSound.clip);
             string bonus = other.GetComponent<Bonus>().bonus;
             if (bonus.Equals("PieceUp"))
             {
@@ -131,10 +155,20 @@ public class PlayerManager : MonoBehaviour
     }
     public void EndGame()
     {
+        endgameSound.PlayOneShot(endgameSound.clip);
         SaveData data = new SaveData(
             (int)Mathf.Max(HighScore, Score)
         );
         SaveSystem.Write(data);
+        SceneManager.Instance.pieceLeft = 0;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        Destroy(transform.GetChild(0).gameObject);
+        StartCoroutine(waittorestart());
+    }
+
+    IEnumerator waittorestart()
+    {
+        yield return new WaitForSeconds(3f);
         Destroy(SceneManager.Instance.gameObject);
         UnityEngine.SceneManagement.SceneManager.LoadScene("game");
     }
